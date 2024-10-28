@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application;
+namespace Application.UseCases.CreateLimite;
 
 public static class CreateLimiteCommandExtensions
 {

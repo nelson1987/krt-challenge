@@ -1,13 +1,12 @@
 ﻿using Domain.Services;
+using FluentValidation;
 
-namespace Application;
-
-public record CreateLimiteCommand(string Documento, string Agencia, string Conta, decimal Valor);
-public record CreateLimiteResponse(Guid Id, string Documento, string Agencia, string Conta, decimal Valor);
+namespace Application.UseCases.CreateLimite;
 
 public class CreateLimiteHandler
 {
     private readonly ILimiteService _limiteService;
+    private readonly IValidator<CreateLimiteCommand> _validator;
 
     public CreateLimiteHandler(ILimiteService limiteService)
     {
@@ -18,6 +17,11 @@ public class CreateLimiteHandler
     {
         // Buscar Se Documento Agencia e Conta existem Se não existirem retorna exception Se valor
         // for menor ou igual a 0 retorna exception
+        var validationResult = await _validator.ValidateAsync(command);
+        //if (!validationResult.IsValid)
+        //{
+        //    return Results.BadRequest(validationResult.Errors);
+        //}
         var limite = command.ToEntity();
         var entity = await _limiteService.Create(limite, cancellationToken);
         return entity.ToResponse();
