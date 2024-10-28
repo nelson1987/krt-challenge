@@ -10,7 +10,7 @@ using System.Net;
 
 namespace UnitTests;
 
-public class LimiteRepositoryUnitTests
+public class LimiteRepositoryUnitTests : UnitTestsBase
 {
     private readonly IFixture _fixture = new Fixture()
         .Customize(new AutoMoqCustomization

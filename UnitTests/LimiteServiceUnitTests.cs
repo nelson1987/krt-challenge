@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoMoq;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
@@ -8,14 +7,8 @@ using Moq;
 
 namespace UnitTests;
 
-public class LimiteServiceUnitTests
+public class LimiteServiceUnitTests : UnitTestsBase
 {
-    private readonly IFixture _fixture = new Fixture()
-        .Customize(new AutoMoqCustomization
-        {
-            ConfigureMembers = true
-        });
-
     private readonly LimiteService _sut;
 
     public LimiteServiceUnitTests()
