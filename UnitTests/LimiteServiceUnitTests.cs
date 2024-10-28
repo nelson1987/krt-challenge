@@ -20,7 +20,6 @@ public class LimiteServiceUnitTests
 
     public LimiteServiceUnitTests()
     {
-        //var limite = _fixture.Create<Limite>();
         _fixture.Freeze<Mock<ILimiteRepository>>()
         .Setup(client => client.Buscar(
             It.IsAny<string>(),
