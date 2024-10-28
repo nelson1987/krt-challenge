@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.Services;
 using Moq;
 
 namespace UnitTests;
@@ -65,7 +67,7 @@ public class LimiteServiceUnitTests
             .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync(limite);
 
-        await Assert.ThrowsAsync<Exception>(() => _sut.Create(documento, agencia, conta, valor));
+        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(documento, agencia, conta, valor));
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
