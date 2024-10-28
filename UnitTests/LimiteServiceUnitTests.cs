@@ -62,10 +62,9 @@ public class LimiteServiceUnitTests
         var conta = "Conta";
         var valor = 0.00M;
 
-        var limite = _fixture.Create<Limite>();
         _fixture.Freeze<Mock<ILimiteRepository>>()
             .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .ReturnsAsync(limite);
+            .ReturnsAsync(_fixture.Create<Limite>());
 
         await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(documento, agencia, conta, valor));
 
