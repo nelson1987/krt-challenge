@@ -29,7 +29,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
         var documento = "Documento";
         var agencia = "Agencia";
         var conta = "Conta";
-        var valor = 0.00M;
+        var valor = 0.01M;
 
         await _sut.Create(documento, agencia, conta, valor);
 
@@ -52,7 +52,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
         var documento = "Documento";
         var agencia = "Agencia";
         var conta = "Conta";
-        var valor = 0.00M;
+        var valor = 0.01M;
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
             .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))

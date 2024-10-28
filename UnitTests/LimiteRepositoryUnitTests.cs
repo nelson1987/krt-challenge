@@ -37,7 +37,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
     [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
-        var limite = new Limite("Documento", "Agencia", "Conta", 0.00M);
+        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
         limite = await _sut.Incluir(limite);
 
@@ -46,7 +46,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
         Assert.Equal("Documento", limite.Documento);
         Assert.Equal("Agencia", limite.Agencia);
         Assert.Equal("Conta", limite.Conta);
-        Assert.Equal(0.00M, limite.Valor);
+        Assert.Equal(0.01M, limite.Valor);
 
         _fixture.Freeze<Mock<IAmazonDynamoDB>>()
                 .Verify(x =>
@@ -67,7 +67,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                {
                    return new PutItemResponse { HttpStatusCode = HttpStatusCode.BadRequest };
                });
-        var limite = new Limite("Documento", "Agencia", "Conta", 0.00M);
+        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
         await Assert.ThrowsAsync<ContextoException>(() => _sut.Incluir(limite));
         _fixture.Freeze<Mock<IAmazonDynamoDB>>()

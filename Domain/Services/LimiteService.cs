@@ -5,7 +5,7 @@ using Domain.Repositories;
 
 namespace Domain.Services;
 
-public class LimiteService
+public class LimiteService : ILimiteService
 {
     private readonly ILimiteRepository _limiteRepository;
 
@@ -23,5 +23,10 @@ public class LimiteService
         //Se não existir, criar
         var limite = new Limite(documento, agencia, conta, valor);
         await _limiteRepository.Incluir(limite);
+    }
+
+    public Task<Limite> Create(Limite limite, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }
