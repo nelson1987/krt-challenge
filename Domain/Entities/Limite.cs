@@ -5,9 +5,13 @@ public class Limite
     public Limite(string documento, string agencia, string conta, decimal valor)
     {
         Id = Guid.NewGuid();
+        if (string.IsNullOrWhiteSpace(documento)) throw new ArgumentException("documento");
         Documento = documento;
+        if (string.IsNullOrWhiteSpace(agencia)) throw new ArgumentException("agencia");
         Agencia = agencia;
+        if (string.IsNullOrWhiteSpace(conta)) throw new ArgumentException("conta");
         Conta = conta;
+        if (valor <= 0) throw new ArgumentException("valor");
         Valor = valor;
     }
 
