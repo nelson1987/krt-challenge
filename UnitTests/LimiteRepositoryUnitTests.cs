@@ -29,6 +29,47 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
     }
 
     [Fact]
+    public async Task BuscarLimite_DadosExistente_RetornaDados()
+    {
+        var retornoBanco = new Dictionary<string, AttributeValue>
+            {
+                { "document", new AttributeValue { S = "Documento" } },
+                { "account", new AttributeValue { S = "Conta" } }
+            };
+        _fixture.Freeze<Mock<IAmazonDynamoDB>>()
+            .Setup(client => client.GetItemAsync(
+               It.IsAny<GetItemRequest>(),
+               It.IsAny<CancellationToken>()))
+               .ReturnsAsync((GetItemRequest r, CancellationToken token) =>
+               {
+                   return new GetItemResponse { Item = retornoBanco };
+               });
+
+        var result = await _sut.Buscar("Documento", "Agencia", "Conta", CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.Equal("Documento", result.Document);
+        Assert.Equal("Conta", result.Account);
+    }
+
+    [Fact]
+    public async Task BuscarLimite_DadosInexistente_RetornaNulo()
+    {
+        _fixture.Freeze<Mock<IAmazonDynamoDB>>()
+            .Setup(client => client.GetItemAsync(
+               It.IsAny<GetItemRequest>(),
+               It.IsAny<CancellationToken>()))
+               .ReturnsAsync((GetItemRequest r, CancellationToken token) =>
+               {
+                   return new GetItemResponse { Item = new Dictionary<string, AttributeValue>() };
+               });
+
+        var result = await _sut.Buscar("Documento", "Agencia", "Conta", CancellationToken.None);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
