@@ -25,8 +25,12 @@ public class LimiteService : ILimiteService
         await _limiteRepository.Incluir(limite);
     }
 
-    public Task<Limite> Create(Limite limite, CancellationToken cancellationToken = default)
+    public async Task<Limite> Create(Limite limite, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var limiteExistente = await _limiteRepository.Buscar(limite.Documento, limite.Agencia, limite.Conta, cancellationToken);
+        if (limiteExistente != null)
+            throw new BusinessException(Mensagem.LIMITE_CADASTRADO);
+        await _limiteRepository.Incluir(limite);
+        return limite;
     }
 }

@@ -18,20 +18,64 @@ public class LimiteRepository : ILimiteRepository
         _dynamoDb = dynamoDb;
     }
 
-    public Task<Limite> Buscar(string documento, string agencia, string conta)
+    public async Task<Limite> Buscar(string documento, string agencia, string conta, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var request = new GetItemRequest
+        {
+            TableName = "bounds",
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { "document", new AttributeValue { S = documento } },
+                { "account", new AttributeValue { S = conta } }
+            }
+        };
+
+        var response = await _dynamoDb.GetItemAsync(request, cancellationToken);
+        if (response.Item.Count == 0)
+        {
+            return null;
+        }
+
+        var itemAsDocument = Document.FromAttributeMap(response.Item);
+        var dto = JsonSerializer.Deserialize<LimiteDto>(itemAsDocument.ToJson());
+        return new Limite(dto.Document, dto.Branch, dto.Account, dto.Value, Guid.Parse(dto.Id));
     }
+
+    //public Task<Limite> BuscarPorId(Guid id)
+    //{
+    //    var request = new GetItemRequest
+    //    {
+    //        TableName = "limite",
+    //        Key = new Dictionary<string, AttributeValue>
+    //        {
+    //            { "pk", new AttributeValue { S = id.ToString() } },
+    //            { "sk", new AttributeValue { S = id.ToString() } }
+    //        }
+    //    };
+
+    // var response = await _dynamoDb.GetItemAsync(request); if (response.Item.Count == 0) { return
+    // null; }
+
+    //    var itemAsDocument = Document.FromAttributeMap(response.Item);
+    //    return JsonSerializer.Deserialize<BoundDto>(itemAsDocument.ToJson());
+    //}
 
     public async Task<Limite> Incluir(Limite limite)
     {
-        var customerAsJson = JsonSerializer.Serialize(limite);
+        var dto = new LimiteDto
+        {
+            Document = limite.Documento,
+            Account = limite.Conta,
+            Branch = limite.Agencia,
+            Value = limite.Valor
+        };
+        var customerAsJson = JsonSerializer.Serialize(dto);
         var itemAsDocument = Document.FromJson(customerAsJson);
         var itemAsAttributes = itemAsDocument.ToAttributeMap();
 
         var createItemRequest = new PutItemRequest
         {
-            TableName = "limite",
+            TableName = "bounds",
             Item = itemAsAttributes
         };
 

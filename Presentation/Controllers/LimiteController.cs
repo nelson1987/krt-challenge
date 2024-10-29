@@ -1,3 +1,5 @@
+using Application.UseCases.CreateLimite;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -7,8 +9,20 @@ namespace Presentation.Controllers;
 public class LimiteController : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Post()
+    public async Task<IActionResult> Post(
+        [FromBody] CreateLimiteCommand command,
+        [FromServices] IValidator<CreateLimiteCommand> validator,
+        [FromServices] ICreateLimiteHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        return StatusCode(200);
+        command = new CreateLimiteCommand("Documento", "Agencia", "Conta", 0.01M);
+
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return StatusCode(412, validationResult.Errors);
+
+        var response = await handler.Handle(command, cancellationToken);
+
+        return response.IsSuccess ? StatusCode(200, response.Value) : StatusCode(404);
     }
 }
