@@ -1,7 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Repositories;
@@ -12,12 +11,6 @@ namespace UnitTests;
 
 public class LimiteRepositoryUnitTests : UnitTestsBase
 {
-    private readonly IFixture _fixture = new Fixture()
-        .Customize(new AutoMoqCustomization
-        {
-            ConfigureMembers = true
-        });
-
     private readonly LimiteRepository _sut;
 
     public LimiteRepositoryUnitTests()
