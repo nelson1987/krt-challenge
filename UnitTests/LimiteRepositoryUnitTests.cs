@@ -45,7 +45,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                    return new GetItemResponse { Item = retornoBanco };
                });
 
-        var result = await _sut.Buscar("Documento", "Agencia", "Conta", CancellationToken.None);
+        var result = await _sut.GetAsync("Documento", "Agencia", "Conta", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("Documento", result.Document);
@@ -64,7 +64,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                    return new GetItemResponse { Item = new Dictionary<string, AttributeValue>() };
                });
 
-        var result = await _sut.Buscar("Documento", "Agencia", "Conta", CancellationToken.None);
+        var result = await _sut.GetAsync("Documento", "Agencia", "Conta", CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -74,7 +74,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
     {
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
-        var result = await _sut.Incluir(limite.ToDto(), CancellationToken.None);
+        var result = await _sut.InsertAsync(limite.ToDto(), CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal(limite.Documento, result.Document);
@@ -103,7 +103,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                });
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
-        await Assert.ThrowsAsync<ContextoException>(() => _sut.Incluir(limite.ToDto()));
+        await Assert.ThrowsAsync<ContextoException>(() => _sut.InsertAsync(limite.ToDto()));
         _fixture.Freeze<Mock<IAmazonDynamoDB>>()
                 .Verify(x =>
                     x.PutItemAsync(

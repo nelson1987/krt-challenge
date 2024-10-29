@@ -40,7 +40,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
         var postResult = await _sut.Post(_command, _validator.Object, _handler.Object, CancellationToken.None);
 
         ObjectResult result = Assert.IsType<ObjectResult>(postResult);
-        Assert.Equal(200, result.StatusCode);
+        Assert.Equal(201, result.StatusCode);
         CreateLimiteResponse response = Assert.IsType<CreateLimiteResponse>(result.Value);
         Assert.Equal(_command.Documento, response.Documento);
         Assert.Equal(_command.Agencia, response.Agencia);
@@ -63,7 +63,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
         var result = await _sut.Post(_command, _validator.Object, _handler.Object, CancellationToken.None);
 
         StatusCodeResult response = Assert.IsType<StatusCodeResult>(result);
-        Assert.Equal(404, response.StatusCode);
+        Assert.Equal(400, response.StatusCode);
         _validator.Verify(x => x.ValidateAsync(_command, It.IsAny<CancellationToken>()), Times.Once);
         _handler.Verify(x => x.Handle(_command, CancellationToken.None), Times.Once);
     }

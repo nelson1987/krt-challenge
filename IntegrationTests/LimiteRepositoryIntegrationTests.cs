@@ -1,7 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
-using Domain.Entities;
-using Domain.Helpers;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using Domain.DTOs;
 using Infrastructure.Repositories;
 
 namespace IntegrationTests;
@@ -9,6 +10,12 @@ namespace IntegrationTests;
 public class LimiteRepositoryIntegrationTests
 {
     private readonly LimiteRepository _repository;
+
+    private IFixture _fixture = new Fixture()
+        .Customize(new AutoMoqCustomization
+        {
+            ConfigureMembers = true
+        });
 
     public LimiteRepositoryIntegrationTests()
     {
@@ -34,26 +41,27 @@ public class LimiteRepositoryIntegrationTests
     [Fact]
     public async Task FluxoCompleto()
     {
-        /*
-         * Busar um dado
-         * Criar um dado
-         * Buscar o dado
-         * Alterar o dado
-         * Buscar o dado
-         * Deletar o dado
-         * Buscar o dado
-         */
-        var limiteEntity = new Limite("Documento", "Agencia", "Conta", 0.01M);
-        var limite = limiteEntity.ToDto();
-        var limiteBuscado = await _repository.Buscar(limiteEntity.Documento, limiteEntity.Agencia, limiteEntity.Conta, CancellationToken.None);
+        LimiteDto limiteDto = _fixture
+            .Build<LimiteDto>()
+            .Create();
+        var limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
         Assert.Null(limiteBuscado);
 
-        var limiteCriado = await _repository.Incluir(limite, CancellationToken.None);
-        Assert.Equal(limite, limiteCriado);
+        var limiteCriado = await _repository.InsertAsync(limiteDto, CancellationToken.None);
+        Assert.Equal(limiteDto, limiteCriado);
 
-        limiteBuscado = await _repository.Buscar(limiteEntity.Documento, limiteEntity.Agencia, limiteEntity.Conta, CancellationToken.None);
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
         Assert.NotNull(limiteBuscado);
 
-        //limiteBuscado.AlterarLimite(0.01M);
+        limiteDto = limiteDto with { Value = 0.02M };
+        var limiteAlterado = await _repository.UpdateAsync(limiteDto, CancellationToken.None);
+        Assert.Equal(limiteDto, limiteAlterado);
+
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        Assert.NotNull(limiteBuscado);
+
+        await _repository.DeleteAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        Assert.Null(limiteBuscado);
     }
 }

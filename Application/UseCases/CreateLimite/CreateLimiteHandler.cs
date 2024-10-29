@@ -1,32 +1,54 @@
 ﻿using Domain.Services;
 using FluentResults;
-using FluentValidation;
 
 namespace Application.UseCases.CreateLimite;
-
-public interface ICreateLimiteHandler
-{
-    Task<Result<CreateLimiteResponse>> Handle(CreateLimiteCommand command, CancellationToken cancellationToken = default);
-}
 
 public class CreateLimiteHandler : ICreateLimiteHandler
 {
     private readonly ILimiteService _limiteService;
-    private readonly IValidator<CreateLimiteCommand> _validator;
 
-    public CreateLimiteHandler(ILimiteService limiteService, IValidator<CreateLimiteCommand> validator)
+    public CreateLimiteHandler(ILimiteService limiteService)
     {
         _limiteService = limiteService;
-        _validator = validator;
     }
 
     public async Task<Result<CreateLimiteResponse>> Handle(CreateLimiteCommand command, CancellationToken cancellationToken = default)
     {
-        // Buscar Se Documento Agencia e Conta existem Se não existirem retorna exception Se valor
-        // for menor ou igual a 0 retorna exception
-
         var limite = command.ToEntity();
         var entity = await _limiteService.Create(limite, cancellationToken);
-        return entity.ToResponse();
+        return Result.Ok(entity.ToCreateResponse());
+    }
+}
+
+public class ChangeLimiteHandler : IChangeLimiteHandler
+{
+    private readonly ILimiteService _limiteService;
+
+    public ChangeLimiteHandler(ILimiteService limiteService)
+    {
+        _limiteService = limiteService;
+    }
+
+    public async Task<Result<ChangeLimiteResponse>> Handle(ChangeLimiteCommand command, CancellationToken cancellationToken = default)
+    {
+        var limite = command.ToEntity();
+        var entity = await _limiteService.Update(limite, cancellationToken);
+        return Result.Ok(entity.ToChangeResponse());
+    }
+}
+
+public class DeleteLimiteHandler : IDeleteLimiteHandler
+{
+    private readonly ILimiteService _limiteService;
+
+    public DeleteLimiteHandler(ILimiteService limiteService)
+    {
+        _limiteService = limiteService;
+    }
+
+    public async Task<Result> Handle(DeleteLimiteCommand command, CancellationToken cancellationToken = default)
+    {
+        await _limiteService.Delete(command.Documento, command.Conta, cancellationToken);
+        return Result.Ok();
     }
 }

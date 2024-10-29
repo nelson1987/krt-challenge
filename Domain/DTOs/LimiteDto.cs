@@ -2,7 +2,7 @@
 
 namespace Domain.DTOs;
 
-public class LimiteDto
+public record LimiteDto
 {
     [JsonPropertyName("document")]
     public string Document { get; init; } = default!;

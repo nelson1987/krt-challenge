@@ -16,7 +16,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
     public LimiteServiceUnitTests()
     {
         _fixture.Freeze<Mock<ILimiteRepository>>()
-        .Setup(client => client.Buscar(
+        .Setup(client => client.GetAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -34,7 +34,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                x.Buscar(
+                x.GetAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -42,7 +42,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
                     , Times.Once);
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                    x.Incluir(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
+                    x.InsertAsync(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
                     , Times.Once);
     }
 
@@ -50,7 +50,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
     public async Task IncluirLimite_QuandoLimiteExistente_DisparaExcecao()
     {
         _fixture.Freeze<Mock<ILimiteRepository>>()
-            .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+            .Setup(client => client.GetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Create<LimiteDto>());
 
@@ -58,7 +58,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                x.Buscar(
+                x.GetAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -66,7 +66,7 @@ public class LimiteServiceUnitTests : UnitTestsBase
                     , Times.Once);
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                    x.Incluir(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
+                    x.InsertAsync(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
                     , Times.Never);
     }
 }
