@@ -1,18 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Infrastructure.Repositories;
+namespace Domain.DTOs;
 
 public class LimiteDto
 {
-    [JsonPropertyName("pk")]
-    public string Pk => Id;
-
-    [JsonPropertyName("sk")]
-    public string Sk => Pk;
-
-    [JsonPropertyName("id")]
-    public string Id { get; init; } = default!;
-
     [JsonPropertyName("document")]
     public string Document { get; init; } = default!;
 
@@ -22,6 +13,6 @@ public class LimiteDto
     [JsonPropertyName("branch")]
     public string Branch { get; init; } = default!;
 
-    [JsonPropertyName("valor")]
+    [JsonPropertyName("Value")]
     public decimal Value { get; init; }
 }

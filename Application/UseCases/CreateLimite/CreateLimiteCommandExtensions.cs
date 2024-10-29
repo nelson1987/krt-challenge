@@ -11,6 +11,6 @@ public static class CreateLimiteCommandExtensions
 
     public static CreateLimiteResponse ToResponse(this Limite entity)
     {
-        return new CreateLimiteResponse(entity.Id, entity.Documento, entity.Agencia, entity.Conta, entity.Valor);
+        return new CreateLimiteResponse(entity.Documento, entity.Agencia, entity.Conta, entity.Valor);
     }
 }

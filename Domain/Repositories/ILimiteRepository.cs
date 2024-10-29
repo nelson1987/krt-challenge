@@ -1,10 +1,10 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Domain.Repositories;
 
 public interface ILimiteRepository
 {
-    Task<Limite> Incluir(Limite limite);
+    Task<LimiteDto> Incluir(LimiteDto limite, CancellationToken cancellationToken = default);
 
-    Task<Limite?> Buscar(string documento, string agencia, string conta, CancellationToken cancellationToken = default);
+    Task<LimiteDto?> Buscar(string documento, string agencia, string conta, CancellationToken cancellationToken = default);
 }

@@ -21,7 +21,6 @@ public class CreateLimiteHandlerUnitTests : UnitTestsBase
 
         Assert.True(handler.IsSuccess);
         var response = handler.Value;
-        Assert.NotEqual(Guid.Empty, response.Id);
         Assert.Equal(_command.Documento, response.Documento);
         Assert.Equal(_command.Agencia, response.Agencia);
         Assert.Equal(_command.Conta, response.Conta);

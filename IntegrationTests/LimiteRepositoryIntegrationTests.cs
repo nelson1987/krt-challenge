@@ -1,6 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
 using Domain.Entities;
+using Domain.Helpers;
 using Infrastructure.Repositories;
 
 namespace IntegrationTests;
@@ -42,14 +43,15 @@ public class LimiteRepositoryIntegrationTests
          * Deletar o dado
          * Buscar o dado
          */
-        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
-        var limiteBuscado = await _repository.Buscar(limite.Documento, limite.Agencia, limite.Conta, CancellationToken.None);
+        var limiteEntity = new Limite("Documento", "Agencia", "Conta", 0.01M);
+        var limite = limiteEntity.ToDto();
+        var limiteBuscado = await _repository.Buscar(limiteEntity.Documento, limiteEntity.Agencia, limiteEntity.Conta, CancellationToken.None);
         Assert.Null(limiteBuscado);
 
-        var limiteCriado = await _repository.Incluir(limite);
+        var limiteCriado = await _repository.Incluir(limite, CancellationToken.None);
         Assert.Equal(limite, limiteCriado);
 
-        limiteBuscado = await _repository.Buscar(limite.Documento, limite.Agencia, limite.Conta, CancellationToken.None);
+        limiteBuscado = await _repository.Buscar(limiteEntity.Documento, limiteEntity.Agencia, limiteEntity.Conta, CancellationToken.None);
         Assert.NotNull(limiteBuscado);
 
         //limiteBuscado.AlterarLimite(0.01M);

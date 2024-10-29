@@ -32,7 +32,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
                 .ReturnsAsync(new ValidationResult());
 
         var handlerResult = new Result<CreateLimiteResponse>();
-        handlerResult.WithValue(new CreateLimiteResponse(Guid.NewGuid(), _command.Documento, _command.Agencia, _command.Conta, _command.Valor));
+        handlerResult.WithValue(new CreateLimiteResponse(_command.Documento, _command.Agencia, _command.Conta, _command.Valor));
         _handler.Setup(h => h.Handle(_command, It.IsAny<CancellationToken>()))
                      .ReturnsAsync(handlerResult);
 
@@ -40,7 +40,6 @@ public class LimiteControllerUnitTests : UnitTestsBase
         ObjectResult result = Assert.IsType<ObjectResult>(postResult);
         Assert.Equal(200, result.StatusCode);
         CreateLimiteResponse response = Assert.IsType<CreateLimiteResponse>(result.Value);
-        Assert.NotEqual(Guid.NewGuid(), response.Id);
         Assert.Equal(_command.Documento, response.Documento);
         Assert.Equal(_command.Agencia, response.Agencia);
         Assert.Equal(_command.Conta, response.Conta);

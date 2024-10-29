@@ -9,7 +9,6 @@ public class LimiteUnitTests
     {
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
         Assert.NotNull(limite);
-        Assert.NotEqual(Guid.Empty, limite.Id);
         Assert.Equal("Documento", limite.Documento);
         Assert.Equal("Agencia", limite.Agencia);
         Assert.Equal("Conta", limite.Conta);

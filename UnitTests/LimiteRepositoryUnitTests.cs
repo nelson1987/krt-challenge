@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2.Model;
 using AutoFixture;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Helpers;
 using Infrastructure.Repositories;
 using Moq;
 using System.Net;
@@ -32,14 +33,13 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
     {
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
-        limite = await _sut.Incluir(limite);
+        var result = await _sut.Incluir(limite.ToDto(), CancellationToken.None);
 
-        Assert.NotNull(limite);
-        Assert.NotEqual(Guid.Empty, limite.Id);
-        Assert.Equal("Documento", limite.Documento);
-        Assert.Equal("Agencia", limite.Agencia);
-        Assert.Equal("Conta", limite.Conta);
-        Assert.Equal(0.01M, limite.Valor);
+        Assert.NotNull(result);
+        Assert.Equal(limite.Documento, result.Document);
+        Assert.Equal(limite.Agencia, result.Branch);
+        Assert.Equal(limite.Conta, result.Account);
+        Assert.Equal(limite.Valor, result.Value);
 
         _fixture.Freeze<Mock<IAmazonDynamoDB>>()
                 .Verify(x =>
@@ -62,7 +62,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                });
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
-        await Assert.ThrowsAsync<ContextoException>(() => _sut.Incluir(limite));
+        await Assert.ThrowsAsync<ContextoException>(() => _sut.Incluir(limite.ToDto()));
         _fixture.Freeze<Mock<IAmazonDynamoDB>>()
                 .Verify(x =>
                     x.PutItemAsync(

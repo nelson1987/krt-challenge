@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Domain.DTOs;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
@@ -15,10 +16,11 @@ public class LimiteServiceUnitTests : UnitTestsBase
     {
         _fixture.Freeze<Mock<ILimiteRepository>>()
         .Setup(client => client.Buscar(
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>()))
-        .ReturnsAsync((Limite?)null);
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()))
+        .ReturnsAsync((LimiteDto?)null);
 
         _sut = _fixture.Create<LimiteService>();
     }
@@ -26,50 +28,47 @@ public class LimiteServiceUnitTests : UnitTestsBase
     [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
-        var documento = "Documento";
-        var agencia = "Agencia";
-        var conta = "Conta";
-        var valor = 0.01M;
+        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
-        await _sut.Create(documento, agencia, conta, valor);
+        await _sut.Create(limite, CancellationToken.None);
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
                 x.Buscar(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>())
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>())
                     , Times.Once);
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                    x.Incluir(It.IsAny<Limite>())
+                    x.Incluir(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
                     , Times.Once);
     }
 
     [Fact]
     public async Task IncluirLimite_QuandoLimiteExistente_DisparaExcecao()
     {
-        var documento = "Documento";
-        var agencia = "Agencia";
-        var conta = "Conta";
-        var valor = 0.01M;
+        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
-            .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .ReturnsAsync(_fixture.Create<Limite>());
+            .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_fixture.Create<LimiteDto>());
 
-        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(documento, agencia, conta, valor));
+        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(limite, CancellationToken.None));
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
                 x.Buscar(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>())
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>())
                     , Times.Once);
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
-                    x.Incluir(It.IsAny<Limite>())
+                    x.Incluir(It.IsAny<LimiteDto>(), It.IsAny<CancellationToken>())
                     , Times.Never);
     }
 }
