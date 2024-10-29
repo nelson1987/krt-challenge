@@ -15,8 +15,6 @@ public class LimiteController : ControllerBase
         [FromServices] ICreateLimiteHandler handler,
         CancellationToken cancellationToken = default)
     {
-        command = new CreateLimiteCommand("Documento", "Agencia", "Conta", 0.01M);
-
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return StatusCode(412, validationResult.Errors);

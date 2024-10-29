@@ -11,6 +11,7 @@ namespace UnitTests;
 public class LimiteServiceUnitTests : UnitTestsBase
 {
     private readonly LimiteService _sut;
+    private readonly Limite _limite;
 
     public LimiteServiceUnitTests()
     {
@@ -22,15 +23,14 @@ public class LimiteServiceUnitTests : UnitTestsBase
                     It.IsAny<CancellationToken>()))
         .ReturnsAsync((LimiteDto?)null);
 
+        _limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
         _sut = _fixture.Create<LimiteService>();
     }
 
     [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
-        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
-
-        await _sut.Create(limite, CancellationToken.None);
+        await _sut.Create(_limite, CancellationToken.None);
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
@@ -49,14 +49,12 @@ public class LimiteServiceUnitTests : UnitTestsBase
     [Fact]
     public async Task IncluirLimite_QuandoLimiteExistente_DisparaExcecao()
     {
-        var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
-
         _fixture.Freeze<Mock<ILimiteRepository>>()
             .Setup(client => client.Buscar(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Create<LimiteDto>());
 
-        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(limite, CancellationToken.None));
+        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(_limite, CancellationToken.None));
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>

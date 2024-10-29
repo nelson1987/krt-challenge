@@ -1,5 +1,8 @@
 ﻿using Application.UseCases.CreateLimite;
 using AutoFixture;
+using Domain.Entities;
+using Domain.Services;
+using Moq;
 
 namespace UnitTests;
 
@@ -10,6 +13,7 @@ public class CreateLimiteHandlerUnitTests : UnitTestsBase
 
     public CreateLimiteHandlerUnitTests()
     {
+        _fixture.Freeze<Mock<ILimiteService>>();
         _command = _fixture.Create<CreateLimiteCommand>();
         _sut = _fixture.Create<CreateLimiteHandler>();
     }
@@ -17,6 +21,10 @@ public class CreateLimiteHandlerUnitTests : UnitTestsBase
     [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
+        _fixture.Freeze<Mock<ILimiteService>>()
+             .Setup(x => x.Create(It.IsAny<Limite>(), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(_command.ToEntity());
+
         var handler = await _sut.Handle(_command, CancellationToken.None);
 
         Assert.True(handler.IsSuccess);
