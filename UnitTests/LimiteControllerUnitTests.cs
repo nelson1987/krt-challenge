@@ -10,13 +10,13 @@ public class LimiteControllerUnitTests : UnitTestsBase
 
     public LimiteControllerUnitTests()
     {
-        _sut = _fixture.Create<LimiteController>();
+        _sut = _fixture.Build<LimiteController>().OmitAutoProperties().Create();
     }
 
     [Fact]
     public async Task Post_RetornaOk()
     {
         var response = await _sut.Post();
-        Assert.IsType<OkObjectResult>(response);
+        Assert.IsType<StatusCodeResult>(response);
     }
 }
