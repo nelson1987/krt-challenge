@@ -8,17 +8,3 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
-
-  gestao-limite:
-    container_name: gestao-limite
-    ports:
-      - "8080:8080"
-    depends_on:
-      - dynamodb
-
-  transferencia:
-    container_name: transferencia
-    ports:
-      - "8081:8080"
-    depends_on:
-      - gestao-limite
