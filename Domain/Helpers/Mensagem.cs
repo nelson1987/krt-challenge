@@ -10,7 +10,7 @@ public static class Mensagem
     public const string LIMITE_INSTANCIADO_SEM_CONTA = "o limite deve ter conta.";
     public const string LIMITE_INSTANCIADO_SEM_VALOR = "O limite deve ter valor maior que 0.";
     public const string TABELA_BOUNDS = "bounds";
-    public const string PROPRIEDADE_DOCUMENT = "document";
+    public const string ATRIBUTO_DOCUMENT = "document";
     public const string PROPRIEDADE_ACCOUNT = "account";
     public const string PROPRIEDADE_BRANCH = "branch";
     public const string PROPRIEDADE_VALUE = "value";

@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Domain.Helpers;
 
 namespace Infrastructure.Extensions;
 
@@ -54,19 +55,19 @@ public static class AmazonDynamoDBClientExtensions
                               {
                                   new AttributeDefinition
                                   {
-                                      AttributeName = "document",
+                                      AttributeName = Mensagem.ATRIBUTO_DOCUMENT,
                                       AttributeType = "S"
                                   },
                                   new AttributeDefinition
                                   {
-                                      AttributeName = "account",
+                                      AttributeName = Mensagem.PROPRIEDADE_ACCOUNT,
                                       AttributeType = "S"
                                   }
                               },
             KeySchema = new List<KeySchemaElement>
                 {
-                    new KeySchemaElement("document", KeyType.HASH),
-                    new KeySchemaElement("account", KeyType.RANGE)
+                    new KeySchemaElement(Mensagem.ATRIBUTO_DOCUMENT, KeyType.HASH),
+                    new KeySchemaElement(Mensagem.PROPRIEDADE_ACCOUNT, KeyType.RANGE)
                 },
             ProvisionedThroughput = new ProvisionedThroughput
             {

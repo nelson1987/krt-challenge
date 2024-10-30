@@ -21,8 +21,8 @@ public class LimiteRepository(IAmazonDynamoDB _dynamoDb, ILogger<LimiteRepositor
             TableName = Mensagem.TABELA_BOUNDS,
             Key = new Dictionary<string, AttributeValue>
             {
-                { "document", new AttributeValue { S = documento } },
-                { "account", new AttributeValue { S = conta } }
+                { Mensagem.ATRIBUTO_DOCUMENT, new AttributeValue { S = documento } },
+                { Mensagem.PROPRIEDADE_ACCOUNT, new AttributeValue { S = conta } }
             }
         };
 
@@ -71,8 +71,8 @@ public class LimiteRepository(IAmazonDynamoDB _dynamoDb, ILogger<LimiteRepositor
             TableName = Mensagem.TABELA_BOUNDS,
             Key = new Dictionary<string, AttributeValue>
             {
-                { "document", new AttributeValue { S = documento } },
-                { "account", new AttributeValue { S = conta } }
+                { Mensagem.ATRIBUTO_DOCUMENT, new AttributeValue { S = documento } },
+                { Mensagem.PROPRIEDADE_ACCOUNT, new AttributeValue { S = conta } }
             }
         };
 

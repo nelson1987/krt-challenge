@@ -5,7 +5,7 @@ namespace Domain.DTOs;
 
 public record LimiteDto
 {
-    [JsonPropertyName(Mensagem.PROPRIEDADE_DOCUMENT)]
+    [JsonPropertyName(Mensagem.ATRIBUTO_DOCUMENT)]
     public string Document { get; init; } = default!;
 
     [JsonPropertyName(Mensagem.PROPRIEDADE_ACCOUNT)]
