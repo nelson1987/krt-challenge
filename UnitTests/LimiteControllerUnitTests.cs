@@ -33,7 +33,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
             .Setup(v => v.ValidateAsync(_command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
         _handler
-            .Setup(h => h.Handle(_command, It.IsAny<CancellationToken>()))
+            .Setup(h => h.HandleAsync(_command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Result<CreateLimiteResponse>()
                 .WithValue(new CreateLimiteResponse(_command.Documento, _command.Agencia, _command.Conta, _command.Valor)));
 
@@ -47,7 +47,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
         Assert.Equal(_command.Conta, response.Conta);
         Assert.Equal(_command.Valor, response.Valor);
         _validator.Verify(x => x.ValidateAsync(_command, It.IsAny<CancellationToken>()), Times.Once);
-        _handler.Verify(x => x.Handle(_command, CancellationToken.None), Times.Once);
+        _handler.Verify(x => x.HandleAsync(_command, CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
             .Setup(v => v.ValidateAsync(_command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
         _handler
-            .Setup(h => h.Handle(_command, It.IsAny<CancellationToken>()))
+            .Setup(h => h.HandleAsync(_command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Result<CreateLimiteResponse>().WithError("Erro"));
 
         var result = await _sut.Post(_command, _validator.Object, _handler.Object, CancellationToken.None);
@@ -65,7 +65,7 @@ public class LimiteControllerUnitTests : UnitTestsBase
         StatusCodeResult response = Assert.IsType<StatusCodeResult>(result);
         Assert.Equal(400, response.StatusCode);
         _validator.Verify(x => x.ValidateAsync(_command, It.IsAny<CancellationToken>()), Times.Once);
-        _handler.Verify(x => x.Handle(_command, CancellationToken.None), Times.Once);
+        _handler.Verify(x => x.HandleAsync(_command, CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -81,6 +81,6 @@ public class LimiteControllerUnitTests : UnitTestsBase
         ObjectResult response = Assert.IsType<ObjectResult>(result);
         Assert.Equal(412, response.StatusCode);
         _validator.Verify(x => x.ValidateAsync(command, It.IsAny<CancellationToken>()), Times.Once);
-        _handler.Verify(x => x.Handle(command, It.IsAny<CancellationToken>()), Times.Never);
+        _handler.Verify(x => x.HandleAsync(command, It.IsAny<CancellationToken>()), Times.Never);
     }
 }

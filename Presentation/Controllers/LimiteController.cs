@@ -7,17 +7,19 @@ namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LimiteController : ControllerBase
+public class LimiteController(ILogger<LimiteController> logger) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromBody] GetLimiteQuery query,
+        [FromQuery] string documento,
+        [FromQuery] string conta,
         [FromServices] ILimiteRepository repository,
         CancellationToken cancellationToken = default)
     {
-        var response = await repository.GetAsync(query.Documento, query.Agencia, query.Conta, cancellationToken);
-
-        return response is null ? StatusCode(404) : StatusCode(200, response.Value);
+        logger.LogInformation($"Message:Iniciado | Method: {nameof(Get)}");
+        var response = await repository.GetAsync(documento, conta, cancellationToken);
+        logger.LogInformation($"Message:Finalizado | Method: {nameof(Get)}");
+        return response is null ? StatusCode(404) : StatusCode(200, response);
     }
 
     [HttpPost]
@@ -27,12 +29,15 @@ public class LimiteController : ControllerBase
         [FromServices] ICreateLimiteHandler handler,
         CancellationToken cancellationToken = default)
     {
+        logger.LogInformation($"Message:Iniciado | Method: {nameof(Post)}");
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
+        {
+            logger.LogInformation($"Message:Finalizado | Method: {nameof(Post)}");
             return StatusCode(412, validationResult.Errors);
-
-        var response = await handler.Handle(command, cancellationToken);
-
+        }
+        var response = await handler.HandleAsync(command, cancellationToken);
+        logger.LogInformation($"Message:Finalizado | Method: {nameof(Post)}");
         return response.IsSuccess ? StatusCode(201, response.Value) : StatusCode(400);
     }
 
@@ -43,12 +48,15 @@ public class LimiteController : ControllerBase
         [FromServices] IChangeLimiteHandler handler,
         CancellationToken cancellationToken = default)
     {
+        logger.LogInformation($"Message:Iniciado | Method: {nameof(Put)}");
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
+        {
+            logger.LogInformation($"Message:Finalizado | Method: {nameof(Put)}");
             return StatusCode(412, validationResult.Errors);
-
-        var response = await handler.Handle(command, cancellationToken);
-
+        }
+        var response = await handler.HandleAsync(command, cancellationToken);
+        logger.LogInformation($"Message:Finalizado | Method: {nameof(Put)}");
         return response.IsSuccess ? StatusCode(204) : StatusCode(400);
     }
 
@@ -59,12 +67,15 @@ public class LimiteController : ControllerBase
         [FromServices] IDeleteLimiteHandler handler,
         CancellationToken cancellationToken = default)
     {
+        logger.LogInformation($"Message:Iniciado | Method: {nameof(Delete)}");
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
+        {
+            logger.LogInformation($"Message:Finalizado | Method: {nameof(Delete)}");
             return StatusCode(412, validationResult.Errors);
-
-        var response = await handler.Handle(command, cancellationToken);
-
+        }
+        var response = await handler.HandleAsync(command, cancellationToken);
+        logger.LogInformation($"Message:Finalizado | Method: {nameof(Delete)}");
         return response.IsSuccess ? StatusCode(204) : StatusCode(400);
     }
 }

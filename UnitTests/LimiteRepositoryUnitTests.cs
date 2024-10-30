@@ -45,7 +45,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                    return new GetItemResponse { Item = retornoBanco };
                });
 
-        var result = await _sut.GetAsync("Documento", "Agencia", "Conta", CancellationToken.None);
+        var result = await _sut.GetAsync("Documento", "Conta", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("Documento", result.Document);
@@ -64,7 +64,7 @@ public class LimiteRepositoryUnitTests : UnitTestsBase
                    return new GetItemResponse { Item = new Dictionary<string, AttributeValue>() };
                });
 
-        var result = await _sut.GetAsync("Documento", "Agencia", "Conta", CancellationToken.None);
+        var result = await _sut.GetAsync("Documento", "Conta", CancellationToken.None);
 
         Assert.Null(result);
     }

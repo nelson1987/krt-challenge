@@ -22,10 +22,10 @@ public class CreateLimiteHandlerUnitTests : UnitTestsBase
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
         _fixture.Freeze<Mock<ILimiteService>>()
-             .Setup(x => x.Create(It.IsAny<Limite>(), It.IsAny<CancellationToken>()))
+             .Setup(x => x.CreateAsync(It.IsAny<Limite>(), It.IsAny<CancellationToken>()))
              .ReturnsAsync(_command.ToEntity());
 
-        var handler = await _sut.Handle(_command, CancellationToken.None);
+        var handler = await _sut.HandleAsync(_command, CancellationToken.None);
 
         Assert.True(handler.IsSuccess);
         var response = handler.Value;

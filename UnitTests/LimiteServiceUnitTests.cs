@@ -19,7 +19,6 @@ public class LimiteServiceUnitTests : UnitTestsBase
         .Setup(client => client.GetAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
         .ReturnsAsync((LimiteDto?)null);
 
@@ -30,12 +29,11 @@ public class LimiteServiceUnitTests : UnitTestsBase
     [Fact]
     public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
     {
-        await _sut.Create(_limite, CancellationToken.None);
+        await _sut.CreateAsync(_limite, CancellationToken.None);
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
                 x.GetAsync(
-                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
@@ -50,16 +48,15 @@ public class LimiteServiceUnitTests : UnitTestsBase
     public async Task IncluirLimite_QuandoLimiteExistente_DisparaExcecao()
     {
         _fixture.Freeze<Mock<ILimiteRepository>>()
-            .Setup(client => client.GetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+            .Setup(client => client.GetAsync(It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(_fixture.Create<LimiteDto>());
 
-        await Assert.ThrowsAsync<BusinessException>(() => _sut.Create(_limite, CancellationToken.None));
+        await Assert.ThrowsAsync<BusinessException>(() => _sut.CreateAsync(_limite, CancellationToken.None));
 
         _fixture.Freeze<Mock<ILimiteRepository>>()
                 .Verify(x =>
                 x.GetAsync(
-                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>())

@@ -4,6 +4,8 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Domain.DTOs;
 using Infrastructure.Repositories;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace IntegrationTests;
 
@@ -35,7 +37,8 @@ public class LimiteRepositoryIntegrationTests
             ServiceURL = url
         };
         IAmazonDynamoDB dynamoDb = new AmazonDynamoDBClient(credentials, config);
-        _repository = new LimiteRepository(dynamoDb);
+        ILogger<LimiteRepository> logger = new Mock<ILogger<LimiteRepository>>().Object;
+        _repository = new LimiteRepository(dynamoDb, logger);
     }
 
     [Fact]
@@ -44,24 +47,24 @@ public class LimiteRepositoryIntegrationTests
         LimiteDto limiteDto = _fixture
             .Build<LimiteDto>()
             .Create();
-        var limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        var limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
         Assert.Null(limiteBuscado);
 
         var limiteCriado = await _repository.InsertAsync(limiteDto, CancellationToken.None);
         Assert.Equal(limiteDto, limiteCriado);
 
-        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
         Assert.NotNull(limiteBuscado);
 
         limiteDto = limiteDto with { Value = 0.02M };
         var limiteAlterado = await _repository.UpdateAsync(limiteDto, CancellationToken.None);
         Assert.Equal(limiteDto, limiteAlterado);
 
-        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
         Assert.NotNull(limiteBuscado);
 
         await _repository.DeleteAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
-        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Branch, limiteDto.Account, CancellationToken.None);
+        limiteBuscado = await _repository.GetAsync(limiteDto.Document, limiteDto.Account, CancellationToken.None);
         Assert.Null(limiteBuscado);
     }
 }
