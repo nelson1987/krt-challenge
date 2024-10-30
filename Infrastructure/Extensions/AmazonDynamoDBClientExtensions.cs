@@ -1,9 +1,9 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
-namespace Infrastructure;
+namespace Infrastructure.Extensions;
 
-public static class AmazonDynamoDBClientExtensionsV2
+public static class AmazonDynamoDBClientExtensions
 {
     public static async Task Migrate(this AmazonDynamoDBClient _dynamoDbClient)
     {
