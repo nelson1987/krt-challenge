@@ -11,11 +11,16 @@ on:
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -27,9 +32,9 @@ jobs:
     
     # Start a container to Integration Tests
     - name: Start containers
-      run: docker-compose -f "./docker-compose.yml" up -d --build
+      run: docker-compose -f 'docker-compose.yml' up -d --build
     - name: Test
       run: dotnet test --no-build --verbosity normal
     # Stop a container to Integration Tests
     - name: Start containers
-      run: docker-compose -f "./docker-compose.yml" down
+      run: docker-compose -f 'docker-compose.yml' down
