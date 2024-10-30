@@ -1,4 +1,6 @@
-﻿using Application.UseCases.CreateLimite;
+﻿using Application.UseCases.ChangeLimite;
+using Application.UseCases.CreateLimite;
+using Application.UseCases.DeleteLimite;
 using Domain.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;

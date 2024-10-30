@@ -1,11 +1,10 @@
-﻿using Application.UseCases.ChangeLimite;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Application.UseCases.CreateLimite;
+namespace Application.UseCases.ChangeLimite;
 
-public class CreateLimiteValidator : AbstractValidator<CreateLimiteCommand>
+public class ChangeLimiteValidator : AbstractValidator<ChangeLimiteCommand>
 {
-    public CreateLimiteValidator()
+    public ChangeLimiteValidator()
     {
         RuleFor(x => x.Documento)
             .NotEmpty();

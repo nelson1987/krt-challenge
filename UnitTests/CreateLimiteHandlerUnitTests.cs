@@ -1,4 +1,5 @@
-﻿using Application.UseCases.CreateLimite;
+﻿using Application.UseCases.ChangeLimite;
+using Application.UseCases.CreateLimite;
 using AutoFixture;
 using Domain.Entities;
 using Domain.Services;

@@ -22,19 +22,6 @@ public static class SerilogLogBuilder
             .Enrich.WithExceptionDetails()
             .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
             .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.Hosting.Diagnostics"))
-            //.WriteTo.Async(writeTo => writeTo.Elasticsearch(new[] { new Uri(configuration["ElasticsearchSettings:uri"]) }, opts =>
-            //{
-            //    opts.DataStream = new DataStreamName("logs", applicationName, "demo");
-            //    //opts.BootstrapMethod = BootstrapMethod.Failure;
-            //}))
-            //{
-            //    opts.TypeName = null,
-            //    opts.AutoRegisterTemplate = true,
-            //    opts.IndexFormat = configuration["ElasticsearchSettings:defaultIndex"],
-            //    opts.BatchAction = ElasticOpType.Create,
-            //    opts.CustomFormatter = new EcsTextFormatter(),
-            //    opts.ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
-            //}))
             .WriteTo.Async(writeTo => writeTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"))
             .CreateLogger();
 

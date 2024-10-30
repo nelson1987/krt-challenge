@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.UseCases.ChangeLimite;
+using Domain.Entities;
 
 namespace Application.UseCases.CreateLimite;
 
