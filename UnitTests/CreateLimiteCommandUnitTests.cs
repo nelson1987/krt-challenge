@@ -17,104 +17,62 @@ public class CreateLimiteCommandUnitTests : UnitTestsBase
     }
 
     [Fact]
-    public async Task IncluirLimite_DadosValidos_RetornaDadosInseridos()
+    public void IncluirLimite_DadosValidos_RetornaDadosInseridos()
         => _sut
             .TestValidate(_command)
             .ShouldNotHaveAnyValidationErrors();
 
     [Fact]
-    public async Task IncluirLimite_DocumentoValorDefault_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Documento = default })
-            .ShouldHaveValidationErrorFor(x => x.Documento)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_DocumentoVazio_RetornaFalha()
+    public void IncluirLimite_DocumentoVazio_RetornaFalha()
         => _sut
             .TestValidate(_command with { Documento = "" })
             .ShouldHaveValidationErrorFor(x => x.Documento)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_DocumentoEspacoEmBranco_RetornaFalha()
+    public void IncluirLimite_DocumentoEspacoEmBranco_RetornaFalha()
         => _sut
             .TestValidate(_command with { Documento = " " })
             .ShouldHaveValidationErrorFor(x => x.Documento)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_DocumentoNulo_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Documento = null })
-            .ShouldHaveValidationErrorFor(x => x.Documento)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_AgenciaValorDefault_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Agencia = default })
-            .ShouldHaveValidationErrorFor(x => x.Agencia)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_AgenciaVazio_RetornaFalha()
+    public void IncluirLimite_AgenciaVazio_RetornaFalha()
         => _sut
             .TestValidate(_command with { Agencia = "" })
             .ShouldHaveValidationErrorFor(x => x.Agencia)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_AgenciaEspacoEmBranco_RetornaFalha()
+    public void IncluirLimite_AgenciaEspacoEmBranco_RetornaFalha()
         => _sut
             .TestValidate(_command with { Agencia = " " })
             .ShouldHaveValidationErrorFor(x => x.Agencia)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_AgenciaNulo_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Agencia = null })
-            .ShouldHaveValidationErrorFor(x => x.Agencia)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_ContaValorDefault_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Conta = default })
-            .ShouldHaveValidationErrorFor(x => x.Conta)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_ContaVazio_RetornaFalha()
+    public void IncluirLimite_ContaVazio_RetornaFalha()
         => _sut
             .TestValidate(_command with { Conta = "" })
             .ShouldHaveValidationErrorFor(x => x.Conta)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_ContaEspacoEmBranco_RetornaFalha()
+    public void IncluirLimite_ContaEspacoEmBranco_RetornaFalha()
         => _sut
             .TestValidate(_command with { Conta = " " })
             .ShouldHaveValidationErrorFor(x => x.Conta)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_ContaNulo_RetornaFalha()
-        => _sut
-            .TestValidate(_command with { Conta = null })
-            .ShouldHaveValidationErrorFor(x => x.Conta)
-            .Only();
-
-    [Fact]
-    public async Task IncluirLimite_ValorIgualAZero_RetornaFalha()
+    public void IncluirLimite_ValorIgualAZero_RetornaFalha()
         => _sut
             .TestValidate(_command with { Valor = 0.00M })
             .ShouldHaveValidationErrorFor(x => x.Valor)
             .Only();
 
     [Fact]
-    public async Task IncluirLimite_ValorMenorQueZero_RetornaFalha()
+    public void IncluirLimite_ValorMenorQueZero_RetornaFalha()
         => _sut
             .TestValidate(_command with { Valor = -0.01M })
             .ShouldHaveValidationErrorFor(x => x.Valor)

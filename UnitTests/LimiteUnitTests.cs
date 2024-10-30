@@ -5,7 +5,7 @@ namespace UnitTests;
 public class LimiteUnitTests
 {
     [Fact]
-    public async Task InstanciarLimite_DadosValidos_RetornaDados()
+    public void InstanciarLimite_DadosValidos_RetornaDados()
     {
         var limite = new Limite("Documento", "Agencia", "Conta", 0.01M);
         Assert.NotNull(limite);
