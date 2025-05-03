@@ -14,3 +14,6 @@ public void Handler(){
 producer.SendAsync();
 }
 }
+public class Service(IConsumer<CreatedTransactionEvent> consumer){
+consumer.Consume();
+}
